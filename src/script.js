@@ -67,12 +67,16 @@ window.addEventListener('resize', () =>
 
 const mouse = new THREE.Vector2();
 
-window.addEventListener('mouseover', (_event)=> {
+window.addEventListener('mousemove', (_event)=> {
 mouse.x = _event.clientX / sizes.width * 2 - 1;
 mouse.y = - (_event.clientY / sizes.height * 2) + 1;
 
-console.log(mouse);
+})
 
+window.addEventListener('click', () => {
+if(currentIntersect){
+    switch(currentIntersect.object)
+}
 })
 
 /**
@@ -101,6 +105,8 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
  */
 const clock = new THREE.Clock()
 
+let currentIntersect = null;
+
 const tick = () =>
 {
     const elapsedTime = clock.getElapsedTime()
@@ -110,20 +116,37 @@ const tick = () =>
     object2.position.y = Math.sin(elapsedTime * 0.8) * 1.5;
     object3.position.y = Math.sin(elapsedTime * 1.4) * 1.5;
 
+    raycaster.setFromCamera(mouse, camera)
+
 //     const rayOrigin = new THREE.Vector3(-3, 0, 0);
 // const rayDirection = new THREE.Vector3(10, 0, 0);
 // rayDirection.normalize();
 
 // raycaster.set(rayOrigin, rayDirection);
 
-// const intersects = raycaster.intersectObjects([object1, object2, object3]);
+const objectsToTest = [object1, object2, object3];
 
-// for(const object of [object1, object2, object3]){
-//     object.material.color.set('#ff0000')
-// }
-// for(const intersect of intersects){
-//     intersect.object.material.color.set('#000fff')
-// }
+const intersects = raycaster.intersectObjects(objectsToTest);
+
+for(const object of objectsToTest){
+    object.material.color.set('#ff0000')
+}
+for(const intersect of intersects){
+    intersect.object.material.color.set('#000fff')
+}
+
+if(intersects.length){
+    if(currentIntersect === null){
+        console.log('mouse enter');
+        
+    }
+}else{
+    if(currentIntersect){
+        console.log('mouse leave');
+    }
+    console.log('no');
+}
+
 
     // Update controls
     controls.update()
