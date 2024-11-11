@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import GUI from 'lil-gui'
+import GUI from 'lil-gui';
+import { GLTFLoader } from 'three/examples/jsm/Addons.js';
 
 /**
  * Base
@@ -14,6 +15,27 @@ const canvas = document.querySelector('canvas.webgl')
 // Scene
 const scene = new THREE.Scene()
 
+let model = null;
+
+const gltfLoader = new GLTFLoader();
+gltfLoader.load('./models/Duck/glTF-Binary/Duck.glb', (gltf) => {
+    model = gltf.scene
+    model.position.y = -1.2;
+   scene.add(model)
+    
+})
+
+/**
+ * Lights
+ */
+// Ambient light
+const ambientLight = new THREE.AmbientLight('#ffffff', 0.9)
+scene.add(ambientLight)
+
+// Directional light
+const directionalLight = new THREE.DirectionalLight('#ffffff', 2.1)
+directionalLight.position.set(1, 2, 3)
+scene.add(directionalLight)
 /**
  * Objects
  */
@@ -74,10 +96,11 @@ mouse.y = - (_event.clientY / sizes.height * 2) + 1;
 })
 
 window.addEventListener('click', () => {
-if(currentIntersect){
-    switch(currentIntersect.object)
-}
+if(currentIntersect){}
 })
+
+
+
 
 /**
  * Camera
@@ -135,18 +158,22 @@ for(const intersect of intersects){
     intersect.object.material.color.set('#000fff')
 }
 
-if(intersects.length){
-    if(currentIntersect === null){
-        console.log('mouse enter');
+// if(intersects.length){
+//     if(currentIntersect === null){
+//         console.log('mouse enter');
         
-    }
-}else{
-    if(currentIntersect){
-        console.log('mouse leave');
-    }
-    console.log('no');
-}
+//     }
+// }else{
+//     if(currentIntersect){
+//         console.log('mouse leave');
+//     }
+//     console.log('no');
+// }
 
+if(model){
+const modelIntersects = raycaster.intersectObject(model);
+console.log(modelIntersects);
+}
 
     // Update controls
     controls.update()
